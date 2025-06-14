@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Browse{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-4 pb-6 bg-gray-100 gap-4">
+    <div class="col-span-1">
+        <form method="get" action="{% url 'items' %}">
+            <input type="text" class="w-fully border rounded-xl py-4 px-6" value="{{ query }}" name="query" placeholder="Search"><br>
+            <button type="submit" class="py-4 px-8 mt-2 rounded-xl bg-teal-500 text-lg" >Search</button>
+            
+        </form>
+        <form method="get" action="{% url 'items' %}">
+            <select name="category">
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+                
+            </select>
+            <button type="submit" class="py-4 px-8 mt-2 rounded-xl bg-teal-500 text-lg" >Filter</button>
+        </form>
+    </div>
+
+    
+    <div class=" col-span-3">
+    
+        <div class="grid grid-cols-3 gap-3">
+            {% for item in items %}
+                <div>
+                    <a href="{% url 'detail' item.id  %}">
+                        
+                        <div class="p-6 bg-white rounded-b-xl">
+                            <h2 class="text-2pl">{{ item.name }}</h2>
+                            <p class="text-gray-500">Price: {{ item.price }}</p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
