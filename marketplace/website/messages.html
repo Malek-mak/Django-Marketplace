@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <h1>Messages: </h1>
+        <div class="grid grid-cols-3 gap-3">
+            {% for message in messages %}
+                <div>
+                    
+                        
+                        <div class="p-6 bg-white rounded-b-xl">
+                            <h2 class="text-gray-500">By: {{ message.sent_by }}</h2>
+                            <h2 class="text-gray-500">About: {{ message.about }}</h2>
+                            <p class="text-2pl border">Message: {{ message.message }}</p><br>
+                            
+                        </div>
+                    
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

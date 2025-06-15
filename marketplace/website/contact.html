@@ -2,5 +2,23 @@
 {% block title %}Contact{% endblock %}
 
 {% block content %}
-    <h1>The Contact page</h1>
+    
+
+    <div class="container">
+        <h1>Contact {{ by }}</h1>
+        
+        <div class="rounded-xl bg-gray-100 p-6 mx-auto py-6 w-1/2">
+            <h3>Enter your message: </h3>
+            <form method="post", action="{% url 'contact' id by %}">
+                {% csrf_token %}
+                <div class="rounded-xl py-6 px-12 pb-6">
+                    {{ form.message }}
+                </div>
+                <div class="rounded-xl py-6 px-12 pb-6">
+                    {{ form.sent_by }}
+                </div>
+                <button type="submit" class="rounded-xl bg-teal-500 hover:bg-teal-700 text-lg px-6 py-4">Send</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
