@@ -20,7 +20,7 @@ def items(request):
         items = items.filter(categoty=categori)
         
         
-    return render(request, 'items.html', {
+    return render(request, 'items/items.html', {
         'items': items,
         'query': query,
         'categories': categories
@@ -31,7 +31,7 @@ def detail(request, pk):
     i = get_object_or_404(item, pk=pk)
     related_items = item.objects.filter(categoty=i.categoty, is_sold=False).exclude(pk=pk)
     
-    return render(request, 'detail.html', {'item': i,
+    return render(request, 'items/detail.html', {'item': i,
                                            'related_items': related_items
                                            })
     
@@ -51,7 +51,7 @@ def new(request):
     else:
         form = itemForm()
         
-    return render(request, 'new.html', {'form': form})
+    return render(request, 'items/new.html', {'form': form})
 
 def delete_item(request, pk):
     i = get_object_or_404(item, pk=pk, created_by = request.user)
@@ -76,4 +76,4 @@ def edit(request, pk):
     else:
         i = get_object_or_404(item, pk=pk, created_by = request.user)
         form = EdititemForm(instance = i)
-    return render(request, 'edit.html', {'form': form})
+    return render(request, 'items/edit.html', {'form': form})

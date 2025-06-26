@@ -7,5 +7,5 @@ from items.models import item
 def index(request):
     user = request.user
     items = item.objects.filter(created_by=user)
-    return render(request, 'dashboard.html', {'items':items})
+    return render(request, 'dashboard/dashboard.html', {'items':items})
     

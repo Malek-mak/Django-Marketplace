@@ -9,11 +9,11 @@ from django.contrib.auth import login, logout, authenticate
 def index(request):
     items = item.objects.filter(is_sold=False)
     categories = category.objects.all()
-    return render(request, 'index.html', {'categories': categories, 'items':items})
+    return render(request, 'website/index.html', {'categories': categories, 'items':items})
 
 
 def contact(request):
-    return render(request, 'contact.html')
+    return render(request, 'website/contact.html')
 
 def signUp(request):
     
@@ -26,7 +26,7 @@ def signUp(request):
     else:
         form = SignUpForm()
         
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'website/signup.html', {'form': form})
 
 def login_user(request):
     if request.method == 'POST':
@@ -44,7 +44,7 @@ def login_user(request):
     else:
         form = LogInForm()
         
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'website/login.html', {'form': form})
 
 def logout_user(request):
     logout(request)
@@ -69,12 +69,14 @@ def contact(request, pk, by):
             
     else:
         form = ContactForm()
-    return render(request, 'contact.html', {'form': form,
+    return render(request, 'website/contact.html', {'form': form,
                                             'by': by,
                                             'id': pk})
+    
+    
 def messages(request):
     messages = message.objects.filter(sent_to=request.user)
-    return render(request, 'messages.html', {
+    return render(request, 'website/messages.html', {
         'messages': messages
     })
         
