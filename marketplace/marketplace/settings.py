@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-e99zlb%@13#1#*3w#l86kqwv-eyb^s86-or*1k7^rixbpeb-$=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['django-marketplace-btty.onrender.com',  'localhost', '127.0.0.1']
 
 
 # Application definition
