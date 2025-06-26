@@ -1,1 +1,0 @@
-python ./marketplace/manage.py collectstatic --no-input
