@@ -1,0 +1,23 @@
+{% extends 'website/base.html' %}
+{% block title %}Account{% endblock %}
+
+{% block content %}
+
+<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+{% for user in user %}
+    <h1 class="mb-12 text-3xl text-center"><strong>{{ user.username }}</strong></h1>
+    <div class="grid grid-cols-1 gap-3">
+        <div class="p-6 bg-white rounded-b-xl">
+            <p class="text-black-800 py-2"> Name:<strong> {{ user.first_name }}</strong></p>
+            <p class="text-black-500 py-2">Last Name:<strong> {{ user.last_name }}</strong></p>
+            <p class="text-black-500 py-2">Email:<strong> {{ user.email }}</strong></p>   
+            <p class="text-black-500 py-2">Phone: <strong>{{ user.phone }}</strong></p>
+            <p class="text-black-500 py-2">Joined:<strong> {{ user.joined_at }}</strong></p>
+            <p class="text-black-500 py-2">Type: <strong>{{ user.type }}</strong></p>
+            <a href="{% url 'edit_profile' %}">
+                <button class="py-3 px-6 rounded-xl bg-teal-500 font-semibold text-lg hover:text-gray-700 text-white">Edit Profile</button>
+            </a>
+    {% endfor %}
+    <a href="{% url 'logout' %}" class=" px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded-xl hover:text-gray-700">Logout</a>
+</div>
+{% endblock %}

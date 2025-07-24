@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from Users.models import User # Assuming User is the custom user model defined in Users app
 
 class message(models.Model):
     message = models.TextField()

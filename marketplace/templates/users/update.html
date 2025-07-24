@@ -1,0 +1,45 @@
+{% extends 'website/base.html' %}
+{% block title %}Account{% endblock %}
+
+{% block content %}
+
+<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <div class="mb-3">
+            <label class="inline-block mb-2">First Name:</label><br>
+            {{ form.first_name }}
+        </div>
+        <div class="mb-3">
+            <label class="inline-block mb-2">Last Name:</label><br>
+            {{ form.last_name }}
+        </div>
+        <div class="mb-3">
+            <label class="inline-block mb-2">Email: </label><br>
+            {{ form.email }}
+        </div>
+        <div class="mb-3">
+            <label class="inline-block mb-2">Phone: </label><br>
+            {{ form.phone }}
+        </div>
+
+    
+
+        <button type="submit" class="py-3 px-7 text-lg bg-teal-400 hover:bg-teal-800 rounded-xl">Update Profile</button>
+        
+       
+    </form>
+    <button type="submit" class="py-3 px-7 text-lg bg-teal-400 hover:bg-teal-800 rounded-xl" onclick="history.back()">Cancel</button>
+    <a href="{% url 'change_password' %}" class="text-teal-500 hover:text-teal-800 mt-4 inline-block">Change Password</a><br>
+    {% if form.errors or form.non_field_errors %}
+     <div class="mb-3 p-6 rounded-xl">
+        {% for field in form %}
+            {{ field.errors }}
+        {% endfor %}
+     </div>
+    {% endif %}
+</div>
+{% endblock %}
