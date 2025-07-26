@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import request
-from Users.models import User
-from .forms import UserUpdateForm, PasswordForm
+from Users.models import User, CartModel, OrderModel
+from .forms import UserUpdateForm, PasswordForm, CartForm
 from django.contrib import messages
+from items.models import item
 
 
 def SellerUser(request):
@@ -53,8 +54,36 @@ def ChangePassword(request):
     return render(request, 'users/change_password.html', {'form': form})
 
 def Cart(request):
-    return render(request, 'users/cart.html')
+    cart = CartModel.objects.filter(user=request.user)
+    return render(request, 'users/cart.html', {'cart': cart})
 
 def Orders(request):
-    return render(request, 'users/orders.html')
+    orders = OrderModel.objects.filter(user=request.user)
+    return render(request, 'users/orders.html', {'orders': orders})
 
+def cancel_order(request, id):
+    order = OrderModel.objects.get(id=id)
+    order.status = 'cancelled'
+    order.save()
+    return redirect('orders')
+
+def remove_from_cart(request, id):
+    cart_item = CartModel.objects.get(id=id)
+    cart_item.delete()
+    return redirect('cart')
+
+def edit_cart(request, id):
+    cart = CartModel.objects.filter(user=request.user)
+    cart_item = get_object_or_404(CartModel, id=id)
+    if request.method == 'POST':
+        form = CartForm(request.POST, instance=cart_item)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cart item updated successfully')
+            form = CartForm(instance=cart_item)
+            return redirect('cart')
+    else:
+        form = CartForm(instance=cart_item)
+    
+    return render(request, 'users/cart.html', {'cart': cart, 'form': form})  
+    

@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, CartModel, OrderModel
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:
@@ -18,3 +18,11 @@ class PasswordForm(forms.Form):
         new_password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'rounded-xl px-6 py-4', 'placeholder': ' New Password'}))
         new_password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'rounded-xl px-6 py-4', 'placeholder': 'Confirm New Password'}))
         
+        
+class CartForm(forms.ModelForm):
+    class Meta:
+        model = CartModel
+        fields = ['quantity']
+        widgets = {
+            'quantity': forms.NumberInput(attrs={'class': 'rounded-xl ', 'placeholder': '1'})
+        }

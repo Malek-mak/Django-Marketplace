@@ -1,5 +1,5 @@
 from django.db import models
-from Users.models import User
+#from Users.models import User
 # Create your models here.
 class category(models.Model):
     name = models.CharField(max_length=255)
@@ -13,7 +13,7 @@ class item(models.Model):
     price = models.FloatField()
     is_sold = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(User, related_name='items', on_delete=models.CASCADE)
+    created_by = models.ForeignKey('Users.User', related_name='items', on_delete=models.CASCADE)
     categoty = models.ForeignKey(category, related_name='items', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='item_images', null=True, blank=True)
     

@@ -1,0 +1,71 @@
+{% extends 'website/base.html' %}
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+<script>
+    const currentUrl = window.location.href;
+    const id = currentUrl.slice(-2, -1);
+    addEventListener("DOMContentLoaded", function(){
+        if (currentUrl.includes('edit_cart')) {
+            document.getElementById('edit_form'+id).style.display = 'block';
+            document.getElementById('edit_button'+id).style.display = 'none';
+        };
+    })
+</script>
+<div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
+    <h1 class="mb-12 text-center text-4xl font-semibold">Cart</h1>
+    {% if messages %}
+            {% for message in messages %}
+                <div class="text-green-500 text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    <div class="grid grid-cols-3 gap-3">
+        {% if cart %}
+            {% for item in cart %}  
+            <div class="p-4 bg-white border hover:bg-teal-100 rounded-xl">
+                <a href="{% url 'detail' item.product.id  %}">
+                    <div>
+                        <h3 class="text-2xl">{{ item.product.name }}</h3>
+                        <p class="text-gray-500">Price: {{ item.product.price }}</p>
+                        <p class="text-gray-500">Quantity: {{ item.quantity }}</p>
+                        <p class="text-gray-500">Added at: {{ item.added_at }}</p>
+                    </div>
+                </a>
+                <a href="{% url 'remove_from_cart' item.id %}">
+                    <button type="submit" class="mt-2 px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-700">Remove from Cart</button>
+                </a>
+                <a href="{% url 'edit_cart' item.id %}">
+                    <button type="submit" class="mt-2 px-4 py-2 bg-teal-500 text-white rounded-xl hover:bg-teal-700" id="edit_button{{ item.id }}">Edit</button>
+                </a>
+                        <form  action="{% url 'edit_cart' item.id %}" method="post" id="edit_form{{ item.id }}" style="display: none;">
+                            {% csrf_token %}
+                            <label for="quantity-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Edit quantity:</label>
+                            <div class="">
+                                {% if form.errors %}
+                                    <p class="text-red-500 text-sm">{{ form.errors }}</p>
+                                {% endif %}
+                                
+                                {{ form.quantity }}
+                                
+                            </div>
+                            
+                            <button type="submit" class="mt-4 px-4 py-2 bg-teal-500 text-white rounded-xl hover:bg-teal-700">Submit</button>
+                            
+                        </form>
+
+            </div>
+                   
+            {% endfor %}
+        {% else %}
+        <div class="text-center text-gray-500">
+            <p>Your cart is empty.</p>  
+        {% endif %}
+        
+        
+        
+    </div>
+</div>
+
+{% endblock %}

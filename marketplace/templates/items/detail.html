@@ -3,13 +3,20 @@
 
 {% block content %}
     <div class="grid grid-cols-5 gap-6">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="text-green-500 text-center">
+                    {{ message }}   
+                </div>
+            {% endfor %}
+        {% endif %}
         
         <div class="col-span-2 bg-gray-100 p-6 rounded-xl  ">
             <h1 class="text-3xl px-6">{{ item.name }}</h1>
             <p class="text-gray-500"><strong>Price: {{ item.price }}</strong></p>
             <p class="text-gray-500"><strong>Seller: {{ item.created_by.username }}</strong></p>
             <p class="text-gray-700"><strong class="text-gray-500">Discription:</strong><br> {{ item.discription }}</p>
-            <a href="{% url 'contact' item.id item.created_by %}" class="inline-block font-semibold mt-6 px-3 py-3 bg-teal-500 text-lg text-white rounded-xl hover:bg-teal-700">Contact Seller</a>
+            
             {% if request.user.is_authenticated and item.created_by == request.user %}
                 
                 <a href="{% url 'delete' item.id %}" class="inline-block font-semibold mt-6 px-3 py-3 bg-teal-500 text-lg text-white rounded-xl hover:bg-teal-700">
@@ -18,6 +25,27 @@
                 <a href="{% url 'edit' item.id %}" class="inline-block font-semibold mt-6 px-3 py-3 bg-teal-500 text-lg text-white rounded-xl hover:bg-teal-700">
                     Edit
                 </a>
+            {% endif %}
+            {% if request.user.is_authenticated and request.user.type == 'buyer' %}
+            <a href="{% url 'contact' item.id item.created_by %}" class="inline-block font-semibold mt-6 px-3 py-3 bg-teal-500 text-lg text-white rounded-xl hover:bg-teal-700">Contact Seller</a>
+            
+                <form  action="" method="post">
+                    {% csrf_token %}
+                    <label for="quantity-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose quantity:</label>
+                    <div class="">
+                        {% if form.errors %}
+                            <p class="text-red-500 text-sm">{{ form.errors }}</p>
+                        {% endif %}
+                        
+                        <input type="number" id="quantity-input" name="quantity" value="{{ form.quantity }}">
+                        
+                    </div>
+                    <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Please enter a quantity.</p>
+                    <button type="submit" class="mt-4 px-4 py-2 bg-teal-500 text-white rounded-xl hover:bg-teal-700">Add to Cart</button>
+                    
+                </form>
+
+                
             {% endif %}
         </div>
     </div>

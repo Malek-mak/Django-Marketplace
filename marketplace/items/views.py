@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import itemForm, EdititemForm
 from django.contrib import messages
 from django.db.models import Q
+from Users.models import User, CartModel, OrderModel
+from Users.forms import CartForm
 
 
 def items(request):
@@ -29,11 +31,26 @@ def items(request):
 
 def detail(request, pk):
     i = get_object_or_404(item, pk=pk)
+    
     related_items = item.objects.filter(categoty=i.categoty, is_sold=False).exclude(pk=pk)
     
+    if request.method == 'POST':
+        frm = CartForm(request.POST)
+        if frm.is_valid():
+            form = frm.save(commit=False)
+            form.user = request.user
+            form.product = i
+            form.save()
+            messages.success(request, 'Item added to cart successfully')
+            return redirect('detail', pk=pk)
+    else:
+        frm = CartForm()
+    
     return render(request, 'items/detail.html', {'item': i,
-                                           'related_items': related_items
+                                           'related_items': related_items,
+                                             'form': frm,
                                            })
+
     
     
 @login_required
