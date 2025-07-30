@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-e99zlb%@13#1#*3w#l86kqwv-eyb^s86-or*1k7^rixbpeb-$=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['malek-marketplace-btty.onrender.com']
+ALLOWED_HOSTS = ['malek-marketplace.onrender.com']
 
 
 # Application definition
@@ -130,7 +130,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ['https://malek-marketplace-btty.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://malek-marketplace.onrender.com']
 
 
 AUTH_USER_MODEL = 'Users.User'
