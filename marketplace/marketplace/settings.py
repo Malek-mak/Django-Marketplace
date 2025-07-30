@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-e99zlb%@13#1#*3w#l86kqwv-eyb^s86-or*1k7^rixbpeb-$='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['django-marketplace-btty.onrender.com', 'localhost']
+ALLOWED_HOSTS = ['malek-marketplace-btty.onrender.com', 'localhost']
 
 
 # Application definition
@@ -123,14 +123,14 @@ USE_TZ = True
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ['https://django-marketplace-btty.onrender.com', 'http://localhost']
+CSRF_TRUSTED_ORIGINS = ['https://malek-marketplace-btty.onrender.com', 'http://localhost']
 
 
 AUTH_USER_MODEL = 'Users.User'
