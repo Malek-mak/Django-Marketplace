@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import request
-from items.models import category, item
+from items.models import category, item, Review
 from django.contrib.auth.decorators import login_required
-from .forms import itemForm, EdititemForm
+from .forms import itemForm, EdititemForm, ReviewForm
 from django.contrib import messages
 from django.db.models import Q
 from Users.models import User, CartModel, OrderModel
@@ -31,24 +31,42 @@ def items(request):
 
 def detail(request, pk):
     i = get_object_or_404(item, pk=pk)
+    reviews = Review.objects.filter(item=i)
+    
+    ratings = Review.objects.filter(item=i).values_list('rating', flat=True)
+    
+    sum_ratings = sum(ratings)
+
+    count_rating = Review.objects.filter(item=i).count()
+    if count_rating > 0:
+        average_rating = sum_ratings/count_rating
+    else :
+        average_rating = 0
     
     related_items = item.objects.filter(categoty=i.categoty, is_sold=False).exclude(pk=pk)
     
     if request.method == 'POST':
-        frm = CartForm(request.POST)
-        if frm.is_valid():
-            form = frm.save(commit=False)
-            form.user = request.user
-            form.product = i
-            form.save()
-            messages.success(request, 'Item added to cart successfully')
-            return redirect('detail', pk=pk)
+            frm = CartForm(request.POST)
+            
+            if frm.is_valid():
+                form = frm.save(commit=False)
+                form.user = request.user
+                form.product = i
+                form.save()
+                messages.success(request, 'Item added to cart successfully')
+                return redirect('detail', pk=pk)
+        
     else:
+        
         frm = CartForm()
     
     return render(request, 'items/detail.html', {'item': i,
                                            'related_items': related_items,
                                              'form': frm,
+                                             'reviews': reviews,
+                                             'count_rating': count_rating,
+                                             'ratings': ratings,
+                                             'average_rating': average_rating,
                                            })
 
     
@@ -94,3 +112,38 @@ def edit(request, pk):
         i = get_object_or_404(item, pk=pk, created_by = request.user)
         form = EdititemForm(instance = i)
     return render(request, 'items/edit.html', {'form': form})
+
+
+
+def ReviewView(request, pk):
+    i = get_object_or_404(item, pk=pk)
+    
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.item = i
+            review.save()
+            messages.warning(request, "Review Added Sucssefully.")
+            return redirect(detail, pk=pk)
+        else:
+            messages.warning(request, "Please enter a valid review.")
+
+    else:
+        form = ReviewForm()
+        
+    return render(request, 'items/review.html', {'form': form})
+    
+    
+def Order(request, pid):
+    if request.method == 'POST':
+        item_purchased = item.objects.get(id=pid)
+        vendor = item_purchased.created_by
+        client = request.user
+        quantity = request.POST.get('quantity_purchased', 1)
+        order = OrderModel(user=vendor, product=item_purchased, quantity=quantity, client=client)
+        order.save()
+        messages.success(request, 'Order placed successfully')
+        return redirect(detail, pid)
+    return redirect(detail, pid)

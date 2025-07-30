@@ -87,3 +87,8 @@ def edit_cart(request, id):
     
     return render(request, 'users/cart.html', {'cart': cart, 'form': form})  
     
+    
+def Vendor(request, user):
+    u = User.objects.get(username=user)
+    items = u.items.all()
+    return render(request, 'users/vendor.html', {'items': items})

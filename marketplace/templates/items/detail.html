@@ -2,16 +2,17 @@
 {% block title %}{{ item.name }}{% endblock %}
 
 {% block content %}
+{% load static %}
     <div class="grid grid-cols-5 gap-6">
         {% if messages %}
             {% for message in messages %}
-                <div class="text-green-500 text-center">
+                <div class="text-green-500 rounded-xl p-6" id="message_container">
                     {{ message }}   
                 </div>
             {% endfor %}
         {% endif %}
         
-        <div class="col-span-2 bg-gray-100 p-6 rounded-xl  ">
+        <div class="col-span-2 bg-gray-100 p-6 rounded-xl ">
             <h1 class="text-3xl px-6">{{ item.name }}</h1>
             <p class="text-gray-500"><strong>Price: {{ item.price }}</strong></p>
             <p class="text-gray-500"><strong>Seller: {{ item.created_by.username }}</strong></p>
@@ -27,36 +28,101 @@
                 </a>
             {% endif %}
             {% if request.user.is_authenticated and request.user.type == 'buyer' %}
-            <a href="{% url 'contact' item.id item.created_by %}" class="inline-block font-semibold mt-6 px-3 py-3 bg-teal-500 text-lg text-white rounded-xl hover:bg-teal-700">Contact Seller</a>
-            
+
+            <button class="rounded-xl inline-block font-semibold mt-6 p-3 bg-teal-500 text-white hover:bg-teal-700" id="order-initial">Order Now</button>
                 <form  action="" method="post">
                     {% csrf_token %}
-                    <label for="quantity-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Choose quantity:</label>
+                    <button id="initialBtn" class="inline-block font-semibold mt-6 px-4 py-2 bg-teal-500 text-white rounded-xl hover:bg-teal-700">Add to Cart</button>
                     <div class="">
                         {% if form.errors %}
                             <p class="text-red-500 text-sm">{{ form.errors }}</p>
                         {% endif %}
-                        
-                        <input type="number" id="quantity-input" name="quantity" value="{{ form.quantity }}">
-                        
                     </div>
-                    <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Please enter a quantity.</p>
-                    <button type="submit" class="mt-4 px-4 py-2 bg-teal-500 text-white rounded-xl hover:bg-teal-700">Add to Cart</button>
+                    
+                        <div class="rounded-xl py-2" style="display: none;" id="qtn-frm">
+                            {{ form.quantity }}
+                        </div>
+                    
+                    <button type="submit" class="inline-block font-semibold mt-6 px-4 py-2 bg-teal-500 text-white rounded-xl hover:bg-teal-700" id="cart_form" style="display: none;">Add</button>
                     
                 </form>
-
                 
-            {% endif %}
-        </div>
+                <a href="{% url 'review' item.id %}">
+                    <button class="rounded-xl inline-block font-semibold mt-6 p-3 bg-teal-500 text-white hover:bg-teal-700">Add a Review</button>
+                </a>
+                <a href="{% url 'contact' item.id item.created_by %}" class="inline-block font-semibold mt-6 px-3 py-3 bg-teal-500 text-lg text-white rounded-xl hover:bg-teal-700">Contact Seller</a>
+                                
+                <form action="{% url 'order' item.id %}" method="post">
+                    {% csrf_token %}
+                    <input id="order-qnt"  name="quantity_purchased" type="number" style="display:none;" placeholder="Quantity" class="rounded-xl border p-3 inline-block">
+                
+                    <button type="submit" id="order-btn" class="rounded-xl inline-block font-semibold mt-6 p-3 bg-teal-500 text-white hover:bg-teal-700" style="display:none;" >Order</button>
+                </form>
+                
+            
+                {% endif %}
+                    
+   </div>
+   <div class="cols-span-1">
+   {% if item.image %}
+            <figure class="image mb-6">
+                <img src="{{ item.image.url }}">
+            </figure>
+    {% endif %}
     </div>
-    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl">
-    <h1 class="mb-12 text-2l text-center">Related Items</h1>
+    </div>
+
+        <div class="grid grid-cols-6 span-4 py-6 gap-12">
+            <button class="rounded-xl px-5 py-3 text-teal-700 hover:bg-teal-200 border font-semibold" id="reviews-button">Reviews</button>
+            <button class="rounded-xl px-5 py-3 text-teal-700 hover:bg-teal-200 border font-semibold" id="related-button">Related Items</button>
+            <a href="{% url 'vendor' item.created_by %}">
+                <button class="rounded-xl px-5 py-3 text-teal-700 hover:bg-teal-200 border font-semibold">Vendor</button>
+            </a>       
+        </div>
+
+    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl" id="reviews-div">
+        <h1 class="mb-12 text-2xl font-bold">Customer Reviews</h1>
+        <div class="grid grid-cols-1 gap-12 span-1">
+        {% if reviews %}
+        <div class="flex items-center">
+                <svg class="w-4 h-4 text-yellow-300 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"/>
+                </svg>
+                <p class="ms-2 text-sm font-bold text-gray-900 dark:text-white">{{ average_rating }}</p>
+                <span class="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
+                <p class="text-sm font-medium text-gray-900">{{ count_rating }} reviews</p>
+            </div>
+        <ul>
+            {% for review in reviews %}
+            
+            <li>
+                <div class="p-4 mb-4 bg-white border rounded-xl">
+                    <h2 class="font-bold">{{ review.user.username }}</h2>
+                    <p class="text-xl">{{ review.get_rating_display }}</p>
+                    <p class="text-gray-500"><strong>Reviewd at:    </strong>    {{ review.created_at }}</p>
+                    <p class="font-semibold">{{ review.comment }}</p>  
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+            
+        </div>
+        
+        {% else %}
+            <p class="text-center text-gray-500">No reviews yet.</p>
+        {% endif %}
+        
+
+    </div>
+
+    <div class="mt-6 px-6 py-12 bg-gray-100 rounded-xl" style="display: none;" id="related-items">
+    <h1 class="mb-12 text-2l font-bold">Related Items</h1>
     <div class="grid grid-cols-3 gap-3">
         {% for item in related_items %}
             <div>
                 <a href="{% url 'detail' item.id  %}">
                     
-                    <div class="p-6 bg-white rounded-b-xl">
+                    <div class="p-6 bg-white rounded-xl border mb-4 hover:bg-teal-200">
                         <h2 class="text-2pl">{{ item.name }}</h2>
                         <p class="text-gray-500">Price: {{ item.price }}</p>
                     </div>
@@ -65,4 +131,49 @@
         {% endfor %}
     </div>
 </div>
+     
+
+    <script>
+        const qnt = document.getElementById('qtn-frm');
+        const sbmt = document.getElementById('cart_form');
+        const btn =  document.getElementById('initialBtn');
+        btn.addEventListener('click', (event) => {
+            event.preventDefault()
+            qnt.style.display = 'block';
+            sbmt.style.display = 'block';
+            btn.style.display = 'none';
+            
+        });
+        var message_ele = document.getElementById("message_container");
+
+        // Set a timeout to hide the element after a few seconds (e.g., 3000 milliseconds = 3 seconds)
+        setTimeout(function(){ 
+            if (message_ele) { // Check if the element exists before trying to hide it
+                message_ele.style.display = "none"; 
+            }
+        }, 1000);
+        const rev = document.getElementById('reviews-button');
+        const itm = document.getElementById('related-button');
+        rev.addEventListener('click', (event)=>{
+            event.preventDefault();
+            document.getElementById('reviews-div').style.display = 'block';
+            document.getElementById('related-items').style.display = 'none';
+
+        });
+        itm.addEventListener('click', (event)=>{
+            event.preventDefault();
+            document.getElementById('related-items').style.display = 'block';
+            document.getElementById('reviews-div').style.display = 'none';
+
+        });
+
+        const order_in = document.getElementById('order-initial');
+        order_in.addEventListener('click', (event)=>{
+            event.preventDefault();
+            document.getElementById('order-btn').style.display = 'block';
+            document.getElementById('order-qnt').style.display = 'block';
+            order_in.style.display = 'none';
+        })
+    </script>
+
 {% endblock %}
