@@ -2,7 +2,7 @@
 {% block title %}{{ item.name }}{% endblock %}
 
 {% block content %}
-{% load static %}
+
     <div class="grid grid-cols-5 gap-6">
         {% if messages %}
             {% for message in messages %}
@@ -17,7 +17,8 @@
             <p class="text-gray-500"><strong>Price: {{ item.price }}</strong></p>
             <p class="text-gray-500"><strong>Seller: {{ item.created_by.username }}</strong></p>
             <p class="text-gray-700"><strong class="text-gray-500">Discription:</strong><br> {{ item.discription }}</p>
-            
+            <p class="text-gray-700"><strong class="text-gray-500">Quantity left:</strong><br> {{ item.quantity }}</p>
+
             {% if request.user.is_authenticated and item.created_by == request.user %}
                 
                 <a href="{% url 'delete' item.id %}" class="inline-block font-semibold mt-6 px-3 py-3 bg-teal-500 text-lg text-white rounded-xl hover:bg-teal-700">

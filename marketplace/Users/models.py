@@ -31,9 +31,11 @@ class CartModel(models.Model):
     product = models.ForeignKey(item, on_delete=models.CASCADE, related_name='cart_items')
     added_at = models.DateTimeField(auto_now_add=True)
     quantity = models.PositiveIntegerField(default=1)
+    total_amount = models.IntegerField(null=True, blank=True)
 
     class Meta:
         db_table = 'cart'
+        
 
     def __str__(self):
         return f"{self.user.username}'s cart"

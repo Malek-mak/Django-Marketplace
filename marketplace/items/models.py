@@ -24,6 +24,7 @@ class item(models.Model):
     created_by = models.ForeignKey('Users.User', related_name='items', on_delete=models.CASCADE)
     categoty = models.ForeignKey(category, related_name='items', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='item_images/', null=True, blank=True)
+    quantity = models.IntegerField()
     
     def __str__(self):
         return f"{self.name}"

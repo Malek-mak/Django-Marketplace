@@ -52,6 +52,7 @@ def detail(request, pk):
                 form = frm.save(commit=False)
                 form.user = request.user
                 form.product = i
+                form.total_amount = i.price * form.quantity
                 form.save()
                 messages.success(request, 'Item added to cart successfully')
                 return redirect('detail', pk=pk)

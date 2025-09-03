@@ -10,8 +10,14 @@
                 <a href="{% url 'detail' item.id  %}">
                     
                     <div class="p-6 bg-white font-semibold rounded-xl border hover:bg-teal-200">
+                        {% if item.image %}
+                            <figure class="image mb-6">
+                                <img src="{{ item.image.url }}">
+                            </figure>
+                        {% endif %}<br>
                         <h2 class="text-2pl">{{ item.name }}</h2>
                         <p class="text-gray-500">Price: {{ item.price }}</p>
+                        <p class="text-gray-500">Quantity left: {{ item.quantity }}</p>
                        
                     </div>
                 </a>

@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-e99zlb%@13#1#*3w#l86kqwv-eyb^s86-or*1k7^rixbpeb-$='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['malek-marketplace.onrender.com']
+ALLOWED_HOSTS = ['malek-marketplace.onrender.com', 'localhost']
 
 
 # Application definition
@@ -42,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Users',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -122,7 +126,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
@@ -135,3 +139,6 @@ CSRF_TRUSTED_ORIGINS = ['https://malek-marketplace.onrender.com']
 
 AUTH_USER_MODEL = 'Users.User'
 PROMETHEUS_EXPORT_MIGRATIONS = False
+
+PAYPAL_CLIENT_ID = "AS2uZ-ufwilXdIivt2AG_KF0f4ZB07D8wPwurvq0_MVfMJEsDFFRHpnKsYQrmqewAUBYmtT6riLoPZcZ"
+PAYPAL_CLIENT_SECRET = "EMV36t5PV_m66VTSyCWPJoxieY__6OLzGSOptYUGAGAW18ulwrsBAzccalxznwOJeG1hMUk3mognlyNi"

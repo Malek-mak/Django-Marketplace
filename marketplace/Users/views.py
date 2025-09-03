@@ -55,6 +55,12 @@ def ChangePassword(request):
 
 def Cart(request):
     cart = CartModel.objects.filter(user=request.user)
+    
+    for item in cart:
+        amount = item.product.price * item.quantity
+        
+        item.total_amount = amount
+        item.save()
     return render(request, 'users/cart.html', {'cart': cart})
 
 def Orders(request):
@@ -77,7 +83,7 @@ def edit_cart(request, id):
     cart_item = get_object_or_404(CartModel, id=id)
     if request.method == 'POST':
         form = CartForm(request.POST, instance=cart_item)
-        if form.is_valid():
+        if form.is_valid(): 
             form.save()
             messages.success(request, 'Cart item updated successfully')
             form = CartForm(instance=cart_item)

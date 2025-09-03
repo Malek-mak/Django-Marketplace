@@ -4,7 +4,9 @@
 {% block content %}
 <script>
     const currentUrl = window.location.href;
-    const id = currentUrl.slice(-2, -1);
+    const id = currentUrl.slice(-3, -1);
+    console.log(currentUrl);
+    console.log(id);
     addEventListener("DOMContentLoaded", function(){
         if (currentUrl.includes('edit_cart')) {
             document.getElementById('edit_form'+id).style.display = 'block';
@@ -27,6 +29,11 @@
             <div class="p-4 bg-white border hover:bg-teal-100 rounded-xl">
                 <a href="{% url 'detail' item.product.id  %}">
                     <div>
+                        {% if item.image %}
+                            <figure class="image mb-6">
+                                <img src="{{ item.image.url }}">
+                            </figure>
+                        {% endif %}<br>
                         <h3 class="text-2xl">{{ item.product.name }}</h3>
                         <p class="text-gray-500">Price: {{ item.product.price }}</p>
                         <p class="text-gray-500">Quantity: {{ item.quantity }}</p>
@@ -54,10 +61,21 @@
                             <button type="submit" class="mt-4 px-4 py-2 bg-teal-500 text-white rounded-xl hover:bg-teal-700">Submit</button>
                             
                         </form>
-
+                 
+                    <form action="{% url 'create_payment' item.id %}" method="POST">
+                        {% csrf_token %}
+                        <p class="font-bold">Amount: ${{ item.total_amount }}</p>
+                        <button type="submit" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-teal-700">Pay with PayPal</button>
+                    </form>
+                
+                   
+                     
+                    
+                </div>
+                {% endfor %}
             </div>
                    
-            {% endfor %}
+            
         {% else %}
         <div class="text-center text-gray-500">
             <p>Your cart is empty.</p>  
@@ -67,5 +85,18 @@
         
     </div>
 </div>
+<script>
+    const paypalButtons = window.paypal.Buttons({
+   style: {
+        shape: "pill",
+        layout: "vertical",
+        color: "blue",
+        
+    }
+});
+paypalButtons.render("#paypal-button-container");
+
+
+</script>
 
 {% endblock %}

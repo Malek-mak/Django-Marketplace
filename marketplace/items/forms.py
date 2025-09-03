@@ -4,13 +4,13 @@ from django import forms
 class itemForm(forms.ModelForm):
     class Meta:
         model = item
-        fields = ("name", 'discription', 'price', 'categoty', 'image')
+        fields = ("name", 'discription', 'price', 'categoty', 'image', 'quantity')
         
         
 class EdititemForm(forms.ModelForm):
     class Meta:
         model = item
-        fields = ("name", 'discription', 'price', 'categoty', 'image', 'is_sold')
+        fields = ("name", 'discription', 'price', 'categoty', 'image', 'is_sold', 'quantity')
 
 
 class ReviewForm(forms.ModelForm):
