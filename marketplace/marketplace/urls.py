@@ -11,5 +11,6 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),
     path('Users/', include('Users.urls')),
     path('Payments/', include('payments.urls'))
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
